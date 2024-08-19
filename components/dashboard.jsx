@@ -14,73 +14,6 @@ import { useEffect, useState } from "react"
 import { UserButton } from "@clerk/nextjs"
 
 
-
-
-// const API_DATA = {
-//       totalAPI : 10,
-//       vulnerableAPI : 4,
-//       secureAPI:6,
-//       apiEndpoints:[
-//         {
-//           endpoint:"/api/hello",
-//           method:"GET",
-//           headers:[
-//             "Content-Type",
-      
-//           ],
-//           risk:"Low"
-//         },
-//         {
-//           endpoint:"/api/status",
-//           method:"GET",
-//           headers:[
-//             "Content-Type",
-      
-//           ],
-//           risk:"Medium"
-//         },{
-//           endpoint:"/api/tnv",
-//           method:"GET",
-//           headers:[
-//             "Content-Type",
-      
-//           ],
-//           risk:"Low"
-//         },
-//       ]
-// }
-
-
-
-const TICKETS = [
-  {
-    ticketId:"Ticket-1",
-    vulnerability:"Unauthorized Access",
-    summary: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, laudantium",
-    description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos, dolores",
-    priority:"High",
-    status:"Open"
-  },
-  {
-    ticketId:"Ticket-2",
-    vulnerability:"Unauthorized Access",
-    summary: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, laudantium",
-    description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos, dolores",
-    priority:"Medium",
-    status:"Open"
-  },
-  {
-    ticketId:"Ticket-3",
-    vulnerability:"Unauthorized Access",
-    summary: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, laudantium",
-    description: "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eos, dolores",
-    priority:"Low",
-    status:"Resolved"
-  },
-
-]
-
-
 export function Dashboard() {
 
   const [API_DATA, setAPI_DATA] = useState({
@@ -90,8 +23,11 @@ export function Dashboard() {
     apiEndpoints:[]
   });
 
-  const [isLoading,setIsLoading] = useState(true);
 
+  const [TICKETS, setTICKETS] = useState([])
+
+  const [isLoading,setIsLoading] = useState(true);
+  const [msg,setMsg] = useState(false)
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -109,8 +45,38 @@ export function Dashboard() {
       }
     };
 
+    const fetchTickets = async () => {
+      const response = await fetch("http://127.0.0.1:8000/api_tickets/")
+      if(!response.ok){
+        console.log("Cannot fetch tickets");
+        return;
+      }
+
+      const data = await response.json();
+      data.reverse()
+      setTICKETS(data);
+    }
+
+    fetchTickets();
+
+    
+
     fetchDashboardData();
   }, []); 
+
+
+  const handleFullScan = async () => {
+    setMsg(true);
+
+    const response = await fetch("http://127.0.0.1:8000/full_scan")
+
+    if(!response.ok){
+      console.log("Full Scan could not complete");
+      return;
+    }
+
+    setMsg(false)
+  }
   return (
     (<div className={`flex min-h-screen ${isLoading ? 'items-center justify-center' : 'w-full'}`}> 
 
@@ -136,6 +102,11 @@ export function Dashboard() {
             </BreadcrumbList>
           </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0 flex items-center gap-2">
+            <div>
+              <p> 
+                {msg ? "Running a full scan.... " : ""}
+                </p>
+            </div>
           <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -144,7 +115,7 @@ export function Dashboard() {
                     <span className="sr-only">Start a full scan</span>
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>Start a full scan</TooltipContent>
+                <TooltipContent onClick= {handleFullScan}>Start a full scan</TooltipContent>
               </Tooltip>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -287,21 +258,21 @@ export function Dashboard() {
           </div>
           <div className="flex-1">
             <div className="font-medium">
-              {ticket.ticketId}: {ticket.vulnerability}
+              {ticket.endpoint}: {ticket.title}
             </div>
-            <div className="text-sm text-muted-foreground">{ticket.summary}</div>
+            <div className="text-sm text-muted-foreground">{ticket.title}</div>
             <div className="mt-2 flex items-center gap-2">
               <Badge
                 variant="outline"
                 className={`${
-                  ticket.priority === "High"
+                  ticket.risk === "High"
                     ? "bg-red-500 text-red-50"
-                    : ticket.priority === "Medium"
+                    : ticket.risk === "Low"
                     ? "bg-yellow-500 text-yellow-50 w-[8vw]"
                     : "bg-green-500 text-yellow-50"
                 }`}
               >
-                {ticket.status === "Resolved" ? "Resolved" : `${ticket.priority} Priority`}
+                {ticket.status === "Resolved" ? "Resolved" : `${ticket.risk}`}
               </Badge>
             </div>
           </div>

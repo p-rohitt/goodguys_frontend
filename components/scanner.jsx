@@ -1,39 +1,68 @@
 "use client"
 
-import { useState } from "react"
-import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Textarea } from "@/components/ui/textarea"
-
+import React, { useState } from 'react';
+import { Button } from './ui/button';
+import { Textarea } from './ui/textarea';
+import { Label } from './ui/label';
+import { Input } from './ui/input';
 export function Scanner() {
-  const [url, setUrl] = useState("")
-  const [headers, setHeaders] = useState([{ key: "", value: "" }])
-  const [payload, setPayload] = useState("")
+  const [url, setUrl] = useState("");
+  const [headers, setHeaders] = useState([{ key: "", value: "" }]);
+  const [payload, setPayload] = useState("");
+
+  const [apiResponse,setApiResponse] = useState("");
+
   const addHeader = () => {
-    setHeaders([...headers, { key: "", value: "" }])
-  }
+    setHeaders([...headers, { key: "", value: "" }]);
+  };
+
   const removeHeader = (index) => {
-    const newHeaders = [...headers]
-    newHeaders.splice(index, 1)
-    setHeaders(newHeaders)
-  }
+    const newHeaders = [...headers];
+    newHeaders.splice(index, 1);
+    setHeaders(newHeaders);
+  };
+
   const handleHeaderChange = (index, field, value) => {
-    const newHeaders = [...headers]
-    newHeaders[index][field] = value
-    setHeaders(newHeaders)
-  }
+    const newHeaders = [...headers];
+    newHeaders[index][field] = value;
+    setHeaders(newHeaders);
+  };
+
   const handlePayloadChange = (e) => {
-    setPayload(e.target.value)
-  }
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("URL:", url)
-    console.log("Headers:", headers)
-    console.log("Payload:", payload)
-  }
+    setPayload(e.target.value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+
+    const headersObject = headers.reduce((acc, header) => {
+      if (header.key && header.value) {
+        acc[header.key] = header.value;
+      }
+      return acc;
+    }, {});
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST', 
+        headers: {
+          ...headersObject,
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await response.json();
+      console.log("Response : ", data) 
+      const stringifiedData  = JSON.stringify(data)
+      setApiResponse(stringifiedData)
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+
   return (
-    (<div className="w-full max-w-2xl mx-auto p-6 md:p-8">
+    <div className="w-full max-w-2xl mx-auto p-6 md:p-8">
       <h1 className="text-3xl font-bold mb-6">On Demand API Scanning</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
@@ -44,7 +73,8 @@ export function Scanner() {
             placeholder="Enter a URL"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
-            required />
+            required
+          />
         </div>
         <div className="space-y-2">
           <Label>Headers</Label>
@@ -56,18 +86,21 @@ export function Scanner() {
                   placeholder="Key"
                   value={header.key}
                   onChange={(e) => handleHeaderChange(index, "key", e.target.value)}
-                  required />
+                  required
+                />
                 <Input
                   type="text"
                   placeholder="Value"
                   value={header.value}
                   onChange={(e) => handleHeaderChange(index, "value", e.target.value)}
-                  required />
+                  required
+                />
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  onClick={() => removeHeader(index)}>
+                  onClick={() => removeHeader(index)}
+                >
                   <TrashIcon className="w-5 h-5" />
                 </Button>
               </div>
@@ -84,15 +117,24 @@ export function Scanner() {
             id="payload"
             placeholder="Enter the payload"
             value={payload}
-            onChange={handlePayloadChange} />
+            onChange={handlePayloadChange}
+            className={"h-[20vh]"}
+          />
         </div>
         <div className="flex justify-end">
           <Button type="submit">Submit</Button>
         </div>
       </form>
-    </div>)
+
+      <div className=''>
+       <p>
+         {apiResponse}
+        </p>
+      </div>
+    </div>
   );
 }
+
 
 function PlusIcon(props) {
   return (

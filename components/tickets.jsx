@@ -1,7 +1,7 @@
 
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Input } from "@/components/ui/input"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
@@ -12,72 +12,28 @@ import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 
 //fetch it from api
-const tickets = [
-  {
-    id: "-123",
-    summary: "Implement new feature for user profile page",
-    status: "Open",
-    actions: [
-      { label: "Close", variant: "outline", size: "sm" },
-      { label: "Resolve", variant: "outline", size: "sm" },
-    ],
-    comments: [
-      { author: "John Doe", content: "This is a comment on the ticket." },
-      { author: "Jane Smith", content: "Another comment on the ticket." },
-    ],
-    assignee: "John Doe",
-    priority: "High",
-    dueDate: "2023-06-30",
-    description: "We need to implement a new feature for the user profile page...",
-  },
-  {
-    id: "-124",
-    summary: "Fix bug in the checkout process",
-    status: "Open",
-    actions: [
-      { label: "Close", variant: "outline", size: "sm" },
-      { label: "Resolve", variant: "outline", size: "sm" },
-    ],
-    comments: [{ author: "Jane Smith", content: "This is a comment on the ticket." }],
-    assignee: "Jane Smith",
-    priority: "Medium",
-    dueDate: "2023-07-15",
-    description: "There is a bug in the checkout process...",
-  },
-  {
-    id: "-125",
-    summary: "Improve performance of the search functionality",
-    status: "Open",
-    actions: [
-      { label: "Close", variant: "outline", size: "sm" },
-      { label: "Resolve", variant: "outline", size: "sm" },
-    ],
-    comments: [
-      { author: "John Doe", content: "This is a comment on the ticket." },
-      { author: "Jane Smith", content: "Another comment on the ticket." },
-      { author: "Bob Johnson", content: "One more comment on the ticket." },
-    ],
-    assignee: "Bob Johnson",
-    priority: "Low",
-    dueDate: "2023-08-31",
-    description: "The search functionality on the website is currently quite slow...",
-  },
-  {
-    id: "-126",
-    summary: "Add support for dark mode",
-    status: "Open",
-    actions: [
-      { label: "Close", variant: "outline", size: "sm" },
-      { label: "Resolve", variant: "outline", size: "sm" },
-    ],
-    assignee: "Jane Smith",
-    priority: "Medium",
-    dueDate: "2023-09-30",
-    description: "Add support for dark mode...",
-  },
-];
+
 
 export function Tickets() {
+
+  const [tickets,setTickets] = useState([]);
+
+
+  useEffect(()=> {
+      const fetchTickets = async () => {
+        const response = await fetch("http://127.0.0.1:8000/api_tickets/")
+        if(!response.ok){
+          console.log("Cannot fetch tickets");
+          return;
+        }
+
+        const data = await response.json();
+
+        setTickets(data);
+      }
+
+      fetchTickets();
+  },[])
   const [isTicketDetailOpen, setIsTicketDetailOpen] = useState(false)
   const [selectedTicket, setSelectedTicket] = useState(null)
   const handleTicketClick = (ticket) => {
@@ -88,6 +44,8 @@ export function Tickets() {
     setIsTicketDetailOpen(false)
     setSelectedTicket(null)
   }
+
+  const i = 0
   return (
     (<div className="flex flex-1 flex-col mt-0 sm:gap-4 sm:py-4 sm:pl-14">
       <header
@@ -117,16 +75,16 @@ export function Tickets() {
               </TableRow>
             </TableHeader>
             <TableBody>
-            {tickets.map((ticket) => (
+            {tickets.map((ticket,index) => (
           <TableRow key={ticket.id} onClick={() => handleTicketClick(ticket)}>
             <TableCell>
               <Link href="#" className="font-medium" prefetch={false}>
-                {ticket.id}
+                {index+i }
               </Link>
             </TableCell>
-            <TableCell>{ticket.summary}</TableCell>
+            <TableCell>{ticket.title}</TableCell>
             <TableCell>
-              {ticket.priority}
+              {ticket.risk}
             </TableCell>
             <TableCell>
              {ticket.status}
@@ -162,7 +120,7 @@ export function Tickets() {
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
                 <div className="font-bold text-lg">{selectedTicket.id}</div>
-                <div className="text-muted-foreground">{selectedTicket.summary}</div>
+                <div className="text-muted-foreground">{selectedTicket.title}</div>
               </div>
               {/* <Button variant="ghost" size="icon" onClick={handleCloseTicketDetail}>
                 <XIcon className="w-5 h-5" />
@@ -175,7 +133,7 @@ export function Tickets() {
               </div>
               <div className="grid gap-2">
                 <div className="text-sm font-medium">Assignee</div>
-                <div className="text-muted-foreground">{selectedTicket.assignee}</div>
+                <div className="text-muted-foreground">{selectedTicket.assignee ? selectedTicket.assignee : "Not Assigned"}</div>
               </div>
               <div className="grid gap-2">
                 <div className="text-sm font-medium">Priority</div>
