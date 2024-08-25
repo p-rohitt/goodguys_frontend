@@ -8,7 +8,7 @@ import { useSignIn } from '@clerk/nextjs';
 import { useState } from "react";
 import { redirect } from "next/navigation"
 import { useRouter } from 'next/navigation'
-
+import Link from "next/link"
 export function Login() {
 
   const { signIn } = useSignIn();
@@ -72,13 +72,21 @@ export function Login() {
             {error && <p className="text-red-500 text-center">{error}</p>}
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex flex-col gap-2 items-center justify-center">
         <Button type="submit" className="w-full">
           Sign in
         </Button>
+        <Link href="signup" className="w-full text-center  gap-2">
+          Not a member?  <span className="underline">
+            
+             Register
+            </span>
+        </Link>
+        
       </CardFooter>
       
       </form>
+      
     </Card>)
   );
 }
