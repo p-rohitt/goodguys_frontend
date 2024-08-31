@@ -1,0 +1,36 @@
+"overallCweidArray": [
+    {
+      "cweid": "525",
+      "count": 2
+    },
+    {
+      "cweid": "693",
+      "count": 2
+    },
+    {
+      "cweid": "200",
+      "count": 2
+    }
+  ],
+  "overallOwaspTagArray": [
+    {
+      "tag": "A05",
+      "count": 2
+    },
+    {
+      "tag": "A01",
+      "count": 2
+    }
+  ]
+
+
+
+
+
+
+
+
+
+  notification_id = data.get('notification_id')
+            status = data.get('status')
+            path = data.get('path')

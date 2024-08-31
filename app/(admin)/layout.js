@@ -21,9 +21,9 @@ const fontBody = Inter({
 
 export default async function Layout({ children }) {
     const { userId } = auth();
-    if (!userId) {
-      return redirect("/login");
-    }
+    // if (!userId) {
+    //   return redirect("/login");
+    // }
   return (
     <html lang="en">
       <body
