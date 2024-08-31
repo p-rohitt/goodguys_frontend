@@ -75,6 +75,7 @@ export function APIDetailsChart() {
             />
             <ChartTooltip
               cursor={false}
+              
               content={<ChartTooltipContent />}
             />
             <Bar dataKey="count" radius={3} />
@@ -82,11 +83,9 @@ export function APIDetailsChart() {
         </ChartContainer>
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
-        <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
+  
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+        We prevent OWASP attacks by using custom middlewares to filter and validate requests, enforce security headers, and manage authentication and input sanitization, ensuring that potential threats are mitigated before they reach your application.
         </div>
       </CardFooter>
     </Card>

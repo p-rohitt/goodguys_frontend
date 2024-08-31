@@ -33,6 +33,17 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Button } from "./ui/button";
+import MarkdownRenderer from "@/lib/markdown";
+import CodeBlock from "./ui/codeblock";
+
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 export function StaticReport({ id }) {
   const [detail, setDetail] = useState();
@@ -74,7 +85,7 @@ export function StaticReport({ id }) {
       let cwenum = 0;
       data["cwe_counts"].forEach((row) => {
         cd.push({
-          browser: "CWE-" + row.cweid,
+          browser: "CWE-" + row.id,
           visitors: row.count,
           fill: colorArray[index++],
         });
@@ -84,19 +95,19 @@ export function StaticReport({ id }) {
       setChartData(cd);
       setCweCount(cwenum);
 
-    //   index = 0;
-    //   let owasp_d = [];
-    //   let owasp_num = 0;
-    //   data["overallOwaspTagArray"].forEach((row) => {
-    //     owasp_d.push({
-    //       browser: row.tag,
-    //       visitors: row.count,
-    //       fill: colorArray[index++],
-    //     });
-    //     owasp_num += row.count;
-    //   });
-    //   setOwaspChartData(owasp_d);
-    //   setOwaspCount(owasp_num);
+      //   index = 0;
+      //   let owasp_d = [];
+      //   let owasp_num = 0;
+      //   data["overallOwaspTagArray"].forEach((row) => {
+      //     owasp_d.push({
+      //       browser: row.tag,
+      //       visitors: row.count,
+      //       fill: colorArray[index++],
+      //     });
+      //     owasp_num += row.count;
+      //   });
+      //   setOwaspChartData(owasp_d);
+      //   setOwaspCount(owasp_num);
       setIsLoading(false);
     };
 
@@ -109,119 +120,213 @@ export function StaticReport({ id }) {
   }, []);
 
   return (
-    <div key={id} className="border rounded-lg p-6 bg-[var(--primary)] mt-[-80px] ml-[-15px]">
+    <div
+      key={id}
+      className="border rounded-lg p-6 bg-[var(--primary)] mt-[-80px] ml-[-15px]"
+    >
       {!isLoading ? (
         <div className="flex gap-2 items-center justify-center ">
-            <div className=" bg-background/80 flex items-center justify-center overflow-auto">
-              <div className="bg-background p-8 rounded-lg shadow-lg w-[70vw] h-[100vh] flex flex-col mt-[-30px]">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold">
-                    Scan Report - {detail.reports[0].timestamp}
-                  </h2>
-                </div>
-                <div className="flex-1 overflow-auto">
-                  <div className="grid gap-6">
-                    <div className="flex items-center justify-center gap-3">
-                      <CWEChart chartData={chartData} cwecount={cwecount} />
-                      <OwaspChart
-                        chartData={owaspChartData}
-                        owaspcount={owaspcount}
-                      />
-                    </div>
-
-                    <h3 className="text-md font-medium text-white bg-black p-2">
-                      {detail.reports[0]["report"][0].endpoint}
-                    </h3>
-                    <Accordion type="single" collapsible className="w-full">
-                      {detail.reports[0]["report"][0].alerts.map(
-                        (alert, alertIndex) => (
-                          <AccordionItem
-                            key={alert.id}
-                            value={`alert-${alertIndex}`}
-                          >
-                            <AccordionTrigger>
-                              <div className="flex items-center gap-2">
-                                <span className="font-small">
-                                  {" "}
-                                  {alertIndex + 1}{" "}
-                                </span>
-                                <span className="text-sm">{alert.name}</span>
-                                <div>
-                                  <RiskBadge risk={alert.risk} />
-                                </div>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <div className="grid gap-2">
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Method: {alert.method} | URL: {alert.url}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Evidence:
-                                  </p>
-                                  <p>
-                                    {alert.evidence ? alert.evidence : "NA"}{" "}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    CWEID:
-                                  </p>
-                                  <p>{alert.cweid ? alert.cweid : "NA"}</p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    WASCID:
-                                  </p>
-                                  <p>{alert.wascid ? alert.wascid : "NA"}</p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Param:
-                                  </p>
-                                  <p>{alert.param ? alert.param : "NA"}</p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Risk Score:
-                                  </p>
-                                  <p>
-                                    {alert.risk_score ? alert.risk_score : "NA"}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Description:
-                                  </p>
-                                  <p>
-                                    {alert.description
-                                      ? alert.description
-                                      : "NA"}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Solution:
-                                  </p>
-                                  <p>
-                                    {alert.solution ? alert.solution : "NA"}
-                                  </p>
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        )
-                      )}
-                    </Accordion>
+          <div className=" bg-background/80 flex items-center justify-center overflow-auto">
+            <div className="bg-background p-8 rounded-lg shadow-lg w-[70vw] flex flex-col mt-[-30px]">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">
+                  Scan Report - {new Date(detail.timestamp).toLocaleString()}
+                </h2>
+              </div>
+              <div className="flex-1 overflow-auto">
+                <div className="grid gap-6">
+                  <div className="flex items-center justify-center gap-3">
+                    <CWEChart chartData={chartData} cwecount={cwecount} />
+                    
                   </div>
+                  {detail["reports"].map((report, index) => {
+                    return (
+                      <div>
+                        <h3 className="text-md font-medium text-slate-400 bg-black p-2">
+                          Filename : {report.filename}
+                        </h3>
+
+                        <Accordion type="single" collapsible className="w-full">
+                          {report["findings"].map((alert, alertIndex) => (
+                            <AccordionItem
+                              key={alert.id}
+                              value={`alert-${alertIndex}`}
+                            >
+                              <AccordionTrigger>
+                                <div className="flex items-center gap-2">
+                                  <span className="font-small">
+                                    {" "}
+                                    {alertIndex + 1}{" "}
+                                  </span>
+                                  <span className="text-sm">{alert.title}</span>
+                                  <div>
+                                  <RiskBadge risk={alert.tag} />
+                                </div>
+                                </div>
+                              </AccordionTrigger>
+                              <AccordionContent>
+                              <div className="grid grid-cols-1">
+
+                
+    <CodeBlock code={alert.code_extract} language={"groovy"}/>
+    
+  </div>
+                                <div className="grid grid-cols-2 gap-2">
+                                  <Card className="w-full max-w-md mx-auto bg-slate-900">
+                                    <CardHeader>
+                                      <CardTitle className="text-center">
+                                        Description
+                                      </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                      <MarkdownRenderer
+                                        markdownText={alert.description}
+                                      />
+                                    </CardContent>
+                                  </Card>
+
+                                  <Card className="w-full max-w-md mx-auto  bg-slate-900">
+                                    <CardHeader>
+                                      <CardTitle className="text-center">
+                                        Alert Information
+                                      </CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="">
+                                      
+                                      <div className="grid grid-cols-2 gap-10 ">
+                                        <div>
+                                          <h3>Line Number</h3>
+                                          <p>{alert.line_number}</p>
+                                        </div>
+                                        <div>
+                                          <p className="text-muted-foreground">
+                                            CWEID:
+                                          </p>
+                                          <p>
+                                            {alert.cwe_ids.length > 0
+                                              ? alert.cwe_ids[0]
+                                              : "NA"}
+                                          </p>
+                                        </div>
+                                        <div>
+                                          <h3>Risk</h3>
+                                          <p>{alert.tag}</p>
+                                        </div>
+                                        <div>
+                                          <h3>Parent Line Number</h3>
+                                          <p>{alert.parent_line_number}</p>
+                                        </div>
+                                      </div>
+                                     
+                                    </CardContent>
+                                  </Card>
+
+                                 
+                                    <Card className="w-full max-w-md mx-auto  bg-slate-900">
+                                      <CardHeader>
+                                        <CardTitle className="text-center">
+                                          Source Information
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <Table>
+                                          <TableHeader>
+                                            <TableRow>
+                                              <TableHead className="w-[100px]">
+                                                Property
+                                              </TableHead>
+                                              <TableHead>Start</TableHead>
+                                              <TableHead>End</TableHead>
+                                            </TableRow>
+                                          </TableHeader>
+                                          <TableBody>
+                                            <TableRow>
+                                              <TableCell className="font-medium">
+                                                Line
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.source.start}
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.source.end}
+                                              </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                              <TableCell className="font-medium">
+                                                Column
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.source.column.start}
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.source.column.end}
+                                              </TableCell>
+                                            </TableRow>
+                                          </TableBody>
+                                        </Table>
+                                      </CardContent>
+                                    </Card>
+                                    <Card className="w-full max-w-md mx-auto  bg-slate-900">
+                                      <CardHeader>
+                                        <CardTitle className="text-center">
+                                          Sink Information
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent>
+                                        <Table>
+                                          <TableHeader>
+                                            <TableRow>
+                                              <TableHead className="w-[100px]">
+                                                Property
+                                              </TableHead>
+                                              <TableHead>Start</TableHead>
+                                              <TableHead>End</TableHead>
+                                            </TableRow>
+                                          </TableHeader>
+                                          <TableBody>
+                                            <TableRow>
+                                              <TableCell className="font-medium">
+                                                Line
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.sink.start}
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.sink.end}
+                                              </TableCell>
+                                            </TableRow>
+                                            <TableRow>
+                                              <TableCell className="font-medium">
+                                                Column
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.sink.column.start}
+                                              </TableCell>
+                                              <TableCell>
+                                                {alert.sink.column.end}
+                                              </TableCell>
+                                            </TableRow>
+                                          </TableBody>
+                                        </Table>
+                                      </CardContent>
+                                    </Card>
+                              
+                                </div>
+                                   
+                                 
+                              </AccordionContent>
+                            </AccordionItem>
+                          ))}
+                        </Accordion>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             </div>
-          
-          <div className="grid gap-4">
+          </div>
+
+          {/* <div className="grid gap-4">
             <Card className="w-[20vw]">
               <CardHeader>
                 <CardTitle> Tickets</CardTitle>
@@ -286,7 +391,7 @@ export function StaticReport({ id }) {
                 </div>
               </CardContent>
             </Card>
-          </div>
+          </div> */}
         </div>
       ) : (
         <p>Loading...</p>
@@ -318,13 +423,16 @@ function XIcon(props) {
 function RiskBadge({ risk }) {
   let colorClass;
   switch (risk) {
-    case "High":
+    case "critical":
       colorClass = "bg-red-500 text-red-50";
       break;
-    case "Medium":
+      case "high":
+        colorClass = "bg-red-700 text-red-100"
+        break;
+    case "medium":
       colorClass = "bg-yellow-500 text-yellow-50";
       break;
-    case "Low":
+    case "low":
       colorClass = "bg-green-500 text-green-50";
       break;
     case "Informational":

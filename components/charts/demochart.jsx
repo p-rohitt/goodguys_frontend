@@ -44,7 +44,7 @@ export default function Demochart() {
             <YAxis spacing={50} />
             <Tooltip 
             labelStyle={{color:"#000"}}
-              formatter={(value, name) => [`${value}`, 'Value']}
+              formatter={(value, name) => [`${value}`, 'Traffic']}
               labelFormatter={(label) => `Time: ${label}s`}
                 itemStyle={{color:"#000"}}
             />
