@@ -85,8 +85,67 @@ export function StartFullScan() {
       setIsLoading(false)
     }
   }
+
+  const handleStaticScan = async () => {
+
+    setIsLoading(true)
+    setOpen(false)
+   toast("SAST Initiated", {
+      description: "We'll notify you on completion.",
+      action: {
+        label: "Undo",
+        onClick: () => console.log("Undo"),
+      },
+    })
+    try {
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    
+    const csrfToken = getCookie('csrftoken');
+    
+      const response = await fetch("http://127.0.0.1:8000/bearerScan/", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken, 
+        },
+      })
+
+      if(!response.ok){
+        throw new Error("Could not perform a full scan")
+      }
+      const data = await response.json()
+      setScanData(data)
+
+    toast("SAST completed successfully!", {
+      description: "Visit the reports page.",
+    })
+
+    } catch (error) {
+      toast("SAST Failed.", {
+        description: "Visit the reports page for more details",
+      })
+
+      console.error("Error starting scan:", error)
+    } finally {
+      setIsLoading(false)
+    }
+  }
   return (
-    (<Dialog open={open} setOpen={setOpen}>
+    (<Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" onClick={()=>setOpen(true)}>Start Scan</Button>
       </DialogTrigger>
@@ -95,8 +154,9 @@ export function StartFullScan() {
           <DialogTitle>Scan Your System</DialogTitle>
           <DialogDescription>Click the button below to start a security scan of your system.</DialogDescription>
         </DialogHeader>
-          <div className="flex justify-end py-4">
-            <Button onClick={handleStartScan}>Start Scan</Button>
+          <div className="flex justify-center gap-3  py-4">
+            <Button onClick={handleStartScan}>Start DAST</Button>
+            <Button onClick={handleStaticScan}>Start SAST</Button>
           </div>
       </DialogContent>
     </Dialog>)

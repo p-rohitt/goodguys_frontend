@@ -5,7 +5,8 @@ import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuIte
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import CodeBlock from './ui/codeblock';
-
+import { ArrowRight } from 'lucide-react';
+import {useRouter} from "next/navigation"
 export function CICDIntegration() {
   const [selectedTool, setSelectedTool] = useState("github");
 
@@ -176,6 +177,9 @@ azure:`This Azure Pipelines YAML configuration includes automated post-build and
     return instructions[selectedTool]
   }
 
+
+  const router = useRouter()
+
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 mt-[-40px]">
       <div className="container grid  gap-6 px-4 md:px-6 lg:grid-cols-2 lg:gap-10">
@@ -185,9 +189,14 @@ azure:`This Azure Pipelines YAML configuration includes automated post-build and
             Select your preferred CI/CD tool from the dropdown, and we'll provide the necessary YAML configuration
             script to get you started.
           </p>
+
           <p className='pt-10 text-muted-foreground md:text-lg/relaxed lg:text-lg/relaxed xl:text-lg/relaxed'>
           {getInstructions()}
           </p>
+
+          <Button onClick={()=> router.push('/dashboard')} className="flex items-center ">
+            Go to Dashboard <ArrowRight />
+          </Button>
         </div>
         <div className="flex flex-col gap-4">
           <DropdownMenu>

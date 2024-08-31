@@ -21,7 +21,7 @@ import { redirect } from "next/dist/server/api-utils";
 import Link from "next/link"
 export function Signup() {
   const [organizationType, setOrganizationType] = useState("new");
-  const [selectedRole, setSelectedRole] = useState(null);
+  const [selectedRole, setSelectedRole] = useState("admin");
 
   const roles = [
     {
@@ -235,7 +235,11 @@ export function Signup() {
                         : ""
                     }`}
                   >
-                    <div className="text-lg font-bold">{role.title}</div>
+                    <div className={`text-lg font-bold ${
+                      selectedRole === role.id
+                        ? "text-black"
+                        : ""
+                    } `}>{role.title}</div>
                     <p className="text-muted-foreground">{role.description}</p>
                     <Button
                       variant="outline"

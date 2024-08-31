@@ -39,7 +39,7 @@ export function Verify() {
       setMsg(""); // Clear the message
 
       // Redirect to the dashboard
-      router.push("/dashboard");
+      router.push("/ci-cd-integration");
     }, 5000);
   };
 
