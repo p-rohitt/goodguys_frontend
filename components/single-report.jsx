@@ -221,7 +221,7 @@ export function SingleReport({ id }) {
               </div>
             </div>
           
-          <div className="grid gap-4 mt-[-300px] top-0">
+          <div className="grid gap-4">
             <Card className="w-[20vw]">
               <CardHeader>
                 <CardTitle> Tickets</CardTitle>
