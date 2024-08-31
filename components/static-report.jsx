@@ -44,7 +44,7 @@ export function StaticReport({ id }) {
   useEffect(() => {
     const fetchSingleReport = async () => {
       const response = await fetch(
-        `http://127.0.0.1:8000/data/dynamicReportById/?report_id=${id}`
+        `http://127.0.0.1:8000/data/staticReportById/?report_id=${id}`
       );
 
       // if(!response.ok){
@@ -72,7 +72,7 @@ export function StaticReport({ id }) {
       let index = 0;
       let cd = [];
       let cwenum = 0;
-      data["overallCweidArray"].forEach((row) => {
+      data["cwe_counts"].forEach((row) => {
         cd.push({
           browser: "CWE-" + row.cweid,
           visitors: row.count,
@@ -84,19 +84,19 @@ export function StaticReport({ id }) {
       setChartData(cd);
       setCweCount(cwenum);
 
-      index = 0;
-      let owasp_d = [];
-      let owasp_num = 0;
-      data["overallOwaspTagArray"].forEach((row) => {
-        owasp_d.push({
-          browser: row.tag,
-          visitors: row.count,
-          fill: colorArray[index++],
-        });
-        owasp_num += row.count;
-      });
-      setOwaspChartData(owasp_d);
-      setOwaspCount(owasp_num);
+    //   index = 0;
+    //   let owasp_d = [];
+    //   let owasp_num = 0;
+    //   data["overallOwaspTagArray"].forEach((row) => {
+    //     owasp_d.push({
+    //       browser: row.tag,
+    //       visitors: row.count,
+    //       fill: colorArray[index++],
+    //     });
+    //     owasp_num += row.count;
+    //   });
+    //   setOwaspChartData(owasp_d);
+    //   setOwaspCount(owasp_num);
       setIsLoading(false);
     };
 

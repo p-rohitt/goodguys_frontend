@@ -44,14 +44,14 @@ const chartConfig = {
         injection: { label: "Injection", color: "hsl(var(--chart-3))" },
         insecureDesign: { label: "Insecure Design", color: "hsl(var(--chart-4))" },
         securityMisconfig: { label: "Security Misconfiguration", color: "hsl(var(--chart-5))" },
-        vulnerableComponents: { label: "Vulnerable and Outdated Components", color: "hsl(var(--chart-6))" },
+        vulnerableComponents: { label: "Vulnerable and Outdated Components", color: "hsl(var(--chart-2))" },
         identificationAuthFailures: {
           label: "Identification and Authentication Failures",
-          color: "hsl(var(--chart-7))",
+          color: "hsl(var(--chart-1))",
         },
-        softwareIntegrityFailures: { label: "Software and Data Integrity Failures", color: "hsl(var(--chart-8))" },
-        loggingMonitoringFailures: { label: "Security Logging and Monitoring Failures", color: "hsl(var(--chart-9))" },
-        serverSideRequestForgery: { label: "Server-Side Request Forgery (SSRF)", color: "hsl(var(--chart-10))" },
+        softwareIntegrityFailures: { label: "Software and Data Integrity Failures", color: "hsl(var(--chart-3))" },
+        loggingMonitoringFailures: { label: "Security Logging and Monitoring Failures", color: "hsl(var(--chart-4))" },
+        serverSideRequestForgery: { label: "Server-Side Request Forgery (SSRF)", color: "hsl(var(--chart-3))" },
       
 }
 
@@ -59,8 +59,8 @@ export function APIDetailsChart() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Bar Chart</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>OWASP Attacks Prevented</CardTitle>
+        <CardDescription>For this endpoint</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -75,7 +75,7 @@ export function APIDetailsChart() {
             />
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent hideLabel />}
+              content={<ChartTooltipContent />}
             />
             <Bar dataKey="count" radius={3} />
           </BarChart>

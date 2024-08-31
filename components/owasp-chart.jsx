@@ -92,7 +92,6 @@ export function OwaspChart({owaspIdCounts}) {
         <Bar dataKey="count" radius={3} />
       </BarChart>
       <div className="mt-4 flex items-center justify-between">
-        <h3 className="text-lg font-semibold">OWASP Top 10 API Attacks Prevented</h3>
         <ChartLegend content={<ChartLegendContent />} />
       </div>
     </ChartContainer>)

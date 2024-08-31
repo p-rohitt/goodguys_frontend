@@ -8,7 +8,7 @@ import {
   AccordionContent,
 } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
-import { AlertCircle, AlertTriangleIcon, SearchIcon } from "lucide-react";
+import { AlertCircle, AlertTriangleIcon, DownloadIcon, FileJsonIcon, FileTextIcon, Loader2, SearchIcon } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "./ui/tabs";
 
 import { TrendingUp } from "lucide-react";
@@ -37,6 +37,11 @@ import {
 
 import { Label, Pie, PieChart } from "recharts";
 import { useRouter } from "next/navigation";
+import downloadJSON from "@/constants/downloadjson";
+import { Button } from "./ui/button";
+import { IconFileTypeCsv, IconFileTypePdf } from "@tabler/icons-react";
+import downloadPDF from "@/constants/downloadpdf";
+import downloadText from "@/constants/downloadtxt";
 
 export function Reports() {
   const [selectedReport, setSelectedReport] = useState(null);
@@ -52,6 +57,8 @@ export function Reports() {
   const [owaspcount, setOwaspCount] = useState(0);
   const [uniquefiles,setUniquefiles]  = useState(0);
   const [totalAlerts, setTotalAlerts] = useState(0);
+  const [staticCweChart,setStaticCweChart] = useState([])
+  const [staticOwaspChart, setStaticOwaspChart] = useState([])
   const router = useRouter();
   useEffect(() => {
     const fetchDataAndProcess = async () => {
@@ -119,11 +126,27 @@ export function Reports() {
         }
         const staticReportsData = await staticReportsResponse.json();
         setSTATIC_REPORTS(staticReportsData);
+
+        index = 0;
+        let static_cwe_d = [];
+        let static_cwe_num = 0;
+        staticReportsData["cwe_counts"].forEach((row) => {
+          static_cwe_d.push({
+            browser: row.cwe_id,
+            visitors: row.count,
+            fill: colorArray[index++],
+          });
+          static_cwe_num += row.count;
+        });
+
+        setStaticCweChart(static_cwe_d);
   
         // Process the filenames from static reports
-        const filenames = staticReportsData?.reports?.map(
-          (report) => report.filename
-        );
+        let i = 0;
+        const filenames = staticReportsData.reports.forEach((report) => {
+          report.files.forEach((file)=>  i++ )
+        })
+
         const totalFindings = staticReportsData?.reports?.reduce((acc, report) => {
           return acc + report.findings.length;
         }, 0);
@@ -137,7 +160,7 @@ export function Reports() {
         const uniqueFilenames = new Set(filenames);
   
         // Count unique filenames
-        const uniqueFilenamesCount = uniqueFilenames.size;
+        const uniqueFilenamesCount = i
         console.log("TOTAL ALERTS", totalFindings)
         setUniquefiles(uniqueFilenamesCount);
         setTotalAlerts(totalFindings)
@@ -152,10 +175,16 @@ export function Reports() {
     fetchDataAndProcess();
   }, []);
 
+  
+
   const handleRowClick = (report) => {
     // setSelectedReport(report);
     router.push(`http://localhost:3000/report?id=${report.id}`);
   };
+
+  const handleStaticRowClick = (report)=> {
+    router.push(`http://localhost:3000/staticReport?id=${report._id}`);
+  }
   return (
     <div className="flex flex-col h-full">
       <header className=" text-white py-4 px-6">
@@ -194,11 +223,7 @@ export function Reports() {
                   </div>
                 </div>
                 <p className="text-xs tracking-wide">
-                  The first graph displays the frequency of CWE vulnerabilities
-                  detected across all scans, highlighting common weakness
-                  patterns. The second graph shows the distribution of OWASP
-                  vulnerabilities, emphasizing the prevalence of specific web
-                  application security risks identified during the scans.
+                Our DAST tool tests running applications to identify security vulnerabilities and weaknesses in real-time. It generates detailed reports, listing all detected CWE and OWASP vulnerabilities, to ensure that deployed applications are secure and resilient.
                 </p>
               </div>
               <div className="p-6">
@@ -208,6 +233,7 @@ export function Reports() {
                       <th className="py-2 px-4 text-left">Timestamp</th>
                       <th className="py-2 px-4 text-left">Alerts</th>
                       <th className="py-2 px-4 text-left">Endpoints scanned</th>
+                      <th className="py-2 px-4 text-left">Download Report</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -227,6 +253,18 @@ export function Reports() {
                         <td className="py-3 px-4 text-2xl font-bold">
                           {report.numEndpoints}
                         </td>
+                        <td className="">
+                          <Button  variant="ghost" onClick={()=>downloadJSON("report.json",report)} className="">
+                            <FileJsonIcon />
+                            
+                          </Button>
+                          <Button variant="ghost" onClick={()=>downloadPDF("report.pdf",JSON.stringify(report))} className="">
+                            <IconFileTypePdf />
+                          </Button>
+                          <Button variant="ghost" onClick={()=>downloadText("report.txt",JSON.stringify(report))} className="">
+                            <FileTextIcon />
+                          </Button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -236,38 +274,46 @@ export function Reports() {
             <TabsContent value="static" className="py-6">
               <div className="w-[50vw] mx-auto ">
                 <div className="flex flex-col gap-2 items-center justify-center">
-                  <div className="flex gap-5">
-                    <ReportCweChart chartData={chartData} />
-                    <ReportOwaspChart chartData={owaspChartData} />
+                  <div className="flex gap-5 items-center">
+                    
+                    <p className="text-md tracking-wide h-[30vh] w-[20vw]">
+                    Our SAST tool analyzes source code to identify security vulnerabilities and weaknesses before deployment. It provides a detailed report, listing all detected CWE and OWASP vulnerabilities, helping to ensure comprehensive code security and integrity.
+                </p>
+                <ReportCweChart chartData={staticCweChart} />
                   </div>
                 </div>
-                <p className="text-xs tracking-wide">
-                  The first graph displays the frequency of CWE vulnerabilities
-                  detected across all scans, highlighting common weakness
-                  patterns. The second graph shows the distribution of OWASP
-                  vulnerabilities, emphasizing the prevalence of specific web
-                  application security risks identified during the scans.
-                </p>
+              
               </div>
               <div className="p-6">
                 <table className="w-full border-collapse">
                   <thead>
                     <tr className="bg-muted text-muted-foreground">
+                      <th className="py-2 px-4 text-left">Timestamp</th>
                       <th className="py-2 px-4 text-left">Vulnerable Files</th>
                       <th className="py-2 px-4 text-left">Total Alerts</th>
                       <th className="py-2 px-4 text-left">Endpoints scanned</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {STATIC_REPORTS?.reports?.map((report, index) => (
+                    {STATIC_REPORTS?.reports?.map((report, index) => {
+
+                          const date = new Date(report.timestamp.$date);
+                          const formattedDate = date.toLocaleString();
+
+                          let i = 0;
+                          report.files.map((file)=> i+=file.findings.length)
+
+                      return (
                       <tr
                         key={index}
                         className="border-b hover:bg-muted/50 cursor-pointer"
-                        onClick={() => handleRowClick(report)}
+                        onClick={() => handleStaticRowClick(report)}
                       >
-                        <td className="py-3 px-4">{uniquefiles}</td>
+                        <td className="py-3 px-4">{formattedDate}</td>
+                        <td className="py-3 px-4">{report.files.length}</td>
                         <td className="py-3 px-4 text-2xl font-bold flex items-center gap-2">
-                          {totalAlerts}{" "}
+                        {i}
+                  
                           <span>
                             <AlertTriangleIcon />
                           </span>
@@ -276,7 +322,7 @@ export function Reports() {
                           {report.numEndpoints}
                         </td>
                       </tr>
-                    ))}
+)})}
                   </tbody>
                 </table>
               </div>
@@ -284,7 +330,7 @@ export function Reports() {
           </Tabs>
         </main>
       ) : (
-        <p>Loading</p>
+        <div className="flex justify-center items-center h-[80vh]"> <Loader2 size={50} className="animate-spin"/></div>
       )}
       {selectedReport && (
         <div className="fixed inset-0 bg-background/80 flex items-center justify-center z-50 overflow-auto">

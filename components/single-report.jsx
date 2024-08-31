@@ -109,11 +109,11 @@ export function SingleReport({ id }) {
   }, []);
 
   return (
-    <div key={id} className="border rounded-lg p-6 bg-[var(--primary)] mt-[-80px] ml-[-15px]">
+    <div key={id} className="border rounded-lg p-6 bg-[var(--primary)] mt-[-100px] ml-[-15px]">
       {!isLoading ? (
-        <div className="flex gap-2 items-center justify-center ">
-            <div className=" bg-background/80 flex items-center justify-center overflow-auto">
-              <div className="bg-background p-8 rounded-lg shadow-lg w-[70vw] h-[100vh] flex flex-col mt-[-30px]">
+        <div className="flex gap-2 items-center justify-center">
+            <div className=" bg-background/80 flex items-center justify-center  ">
+              <div className="bg-background p-8 rounded-lg shadow-lg w-[70vw] flex flex-col mt-[]">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold">
                     Scan Report - {detail.reports[0].timestamp}
@@ -221,7 +221,7 @@ export function SingleReport({ id }) {
               </div>
             </div>
           
-          <div className="grid gap-4">
+          <div className="grid gap-4 mt-[-300px] top-0">
             <Card className="w-[20vw]">
               <CardHeader>
                 <CardTitle> Tickets</CardTitle>

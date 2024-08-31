@@ -68,6 +68,7 @@ import { redirect } from "next/navigation";
 import { useRouter } from "next/navigation";
 import { AnimatePresence,motion } from "framer-motion";
 import { Notifications } from "./notifications";
+import Demochart from "./charts/demochart";
 
 export function Dashboard() {
   const [API_DATA, setAPI_DATA] = useState({
@@ -204,7 +205,7 @@ router.push(`http://localhost:3000/endpoint?path=${encodedPath}`);
             </div>
           </header>
           <main className="grid flex-1 grid-cols-1 gap-4 p-4 sm:px-6 sm:py-0 md:grid-cols-[1fr_300px] md:gap-8">
-            <div className="grid gap-4">
+            <div className="grid gap-4 h-[30vh]">
               <Card>
                 <CardHeader>
                   <CardTitle>API Inventory</CardTitle>
@@ -248,9 +249,19 @@ router.push(`http://localhost:3000/endpoint?path=${encodedPath}`);
                 </CardContent>
               </Card>
 
-              <div className="h-[45vh]">
-                <OwaspChart owaspIdCounts={API_DATA.owasp_id_counts}/>
+              <div className="">
+                <Demochart />
               </div>
+
+              <Card className="h-[45vh]">
+              <CardHeader className="pb-4">
+        <CardTitle className="text-lg">OWASP Attacks Prevented</CardTitle>
+      </CardHeader>
+                <CardContent>
+
+                <OwaspChart owaspIdCounts={API_DATA.owasp_id_counts}/>
+                </CardContent>
+              </Card>
 
               <Card>
                 <CardHeader>
