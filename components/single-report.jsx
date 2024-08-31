@@ -41,6 +41,7 @@ export function SingleReport({ id }) {
   const [owaspChartData, setOwaspChartData] = useState([]);
   const [cwecount, setCweCount] = useState(0);
   const [owaspcount, setOwaspCount] = useState(0);
+  const [isHovering,setIsHovering] = useState(false)
   useEffect(() => {
     const fetchSingleReport = async () => {
       const response = await fetch(
@@ -248,10 +249,10 @@ export function SingleReport({ id }) {
                           <TicketIcon className="h-5 w-5" />
                         </div>
                         <div className="flex-1">
-                          <div className="font-small text-sm">
+                          <div className="font-small text-xs">
                             {ticket.title}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-xs text-muted-foreground">
                             {ticket.title}
                           </div>
                           <div className="mt-2 flex items-center gap-2">
