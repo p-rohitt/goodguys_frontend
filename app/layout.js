@@ -4,8 +4,6 @@ import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 import SidebarNav from "@/components/sidebar";
-import { SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Roboto } from 'next/font/google'
 import { Work_Sans } from 'next/font/google';
 import { Toaster } from "@/components/ui/sonner"
@@ -29,7 +27,7 @@ const fontBody = Work_Sans({
 
 export default function Layout({ children }) {
   return (
-    <ClerkProvider>
+    
     <html lang="en">
       <body
         className={cn("", fontHeading.variable, fontBody.variable)}
@@ -38,6 +36,5 @@ export default function Layout({ children }) {
         <Toaster />
       </body>
     </html>
-        </ClerkProvider>
   );
 }

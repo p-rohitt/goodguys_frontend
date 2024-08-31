@@ -47,7 +47,6 @@ import {
   Sidebar,
 } from "lucide-react";
 import { useEffect, useState } from "react";
-import { UserButton } from "@clerk/nextjs";
 import { OwaspChart } from "./owasp-chart";
 import { ProgressLoader } from "./progress-loader";
 import { ScheduleFullScan } from "./schedule-full-scan";
@@ -85,7 +84,6 @@ export function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [msg, setMsg] = useState(false);
   const [isHovering,setIsHovering] = useState(false)
-  const [notifications,setNotifications] = useState([])
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -120,33 +118,10 @@ export function Dashboard() {
       setTICKETS(data);
     };
 
-    const fetchNotifications = async() => {
-      const response = await fetch("http://127.0.0.1:8000/notification/all/");
-      if (!response.ok) {
-        console.log("Cannot fetch notifications");
-        return;
-      }
-
-      const data = await response.json();
-      setNotifications(data);
-      
-    }
-
-    const fetchOwaspFrequencies= async() => {
-      const response = await fetch("http://127.0.0.1:8000/notification/all/");
-      if (!response.ok) {
-        console.log("Cannot fetch notifications");
-        return;
-      }
-
-      const data = await response.json();
-      setNotifications(data);
-      
-    }
+  
 
     fetchTickets();
     fetchDashboardData();
-    fetchNotifications();
   }, []);
 
   useEffect(() => {
@@ -216,7 +191,7 @@ router.push(`http://localhost:3000/endpoint?path=${encodedPath}`);
                 <p>{msg ? "Running a full scan.... " : ""}</p>
               </div>
               <TooltipProvider>
-              <Notifications notifications={notifications} />
+              <Notifications  />
                 <Link href="ci-cd-integration">
                   <Button variant={"outline"}>CI/CD Integration</Button>
                 </Link>
@@ -226,9 +201,6 @@ router.push(`http://localhost:3000/endpoint?path=${encodedPath}`);
                 
                 <div className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               </TooltipProvider>
-            </div>
-            <div>
-              <UserButton />
             </div>
           </header>
           <main className="grid flex-1 grid-cols-1 gap-4 p-4 sm:px-6 sm:py-0 md:grid-cols-[1fr_300px] md:gap-8">
@@ -303,7 +275,7 @@ router.push(`http://localhost:3000/endpoint?path=${encodedPath}`);
                       <TableRow>
                         <TableHead>Endpoint</TableHead>
                         <TableHead>Method</TableHead>
-                        <TableHead>Headers</TableHead>
+                       
                         <TableHead>Status</TableHead>
                         <TableHead>Vulnerability</TableHead>
                       </TableRow>
@@ -320,15 +292,7 @@ router.push(`http://localhost:3000/endpoint?path=${encodedPath}`);
                               <TableCell>
                                 <Badge variant="outline">{api.method}</Badge>
                               </TableCell>
-                              <TableCell>
-                                <div className="flex flex-wrap gap-1">
-                                  {api.headers.map((header, i) => (
-                                    <Badge key={i} variant="secondary">
-                                      {header}
-                                    </Badge>
-                                  ))}
-                                </div>
-                              </TableCell>
+                            
                               <TableCell>
                                 {api.status}
                               </TableCell>

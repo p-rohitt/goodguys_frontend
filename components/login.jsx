@@ -21,25 +21,10 @@ export function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const domain = email.split('@')[1];
-    if (domain !== 'iiitg.ac.in') {
-      setError('Only emails from iiitg.ac.in are allowed.');
-      return;
-    }
-    try {
-      const result = await signIn.create({
-        identifier: email,
-        password,
-      });
-      // Redirect to dashboard or another page on success
-      // console.log('Sign in successful:', result);
 
       router.push('dashboard');
 
       return;
-    } catch (err) {
-      setError('Invalid email or password ' + err);
-    }
   };
   return (
     (<Card className="w-full max-w-md mx-auto">

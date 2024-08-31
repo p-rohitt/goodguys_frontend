@@ -21,15 +21,33 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
 import {useRouter} from "next/navigation"
+import { toast } from "sonner"
+import { useEffect, useState } from "react"
 // useEffect(()=> {
 //   const getNotifs = ()=> {
 
 //   }
 // },[])
 
-export function Notifications({notifications}) {
+export function Notifications() {
 
   const router = useRouter()
+
+  const [notifications,setNotifications] = useState([])
+  const [isLoading,setIsLoading] = useState(true);
+
+
+  useEffect(()=> {
+   
+    const fetchAllNotifs = async()=>{
+      setIsLoading(true);
+      await fetchNotifications();
+      setIsLoading(false);
+    }
+    fetchAllNotifs()
+
+    
+  },[])
 
   function handleTap(notification){
     console.log("handling tap")
@@ -46,13 +64,32 @@ export function Notifications({notifications}) {
   
       
     }
-    else{
+    else if(notification.notification_code === "5"){
 
-      router.push("http://localhost:3000/reports")
+      router.push(`http://localhost:3000/report?id=${notification.report_id}`);
     }
   
     return;
   }
+
+  const fetchNotifications = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch("http://127.0.0.1:8000/notification/all/");
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      const data = await response.json();
+      // Update the state with the new notifications
+      setNotifications(data);
+
+    
+    } catch (error) {
+      console.error("Fetch error:", error);
+    }finally{
+      setIsLoading(false);
+    }
+  };
 
   const handleApprove = async (notification)=> {
 
@@ -60,24 +97,48 @@ export function Notifications({notifications}) {
       const response = await fetch(`http://127.0.0.1:8000/notification/update/`,{
         method:"POST",
         body:JSON.stringify({
-
+          "notification_id":notification._id.$oid,
+          "status":"allow",
+          "path":notification.api_path
         })
       })
+
+
+      if(!response.ok){
+
+        console.log("Could not update status");
+        return;
+      }
+
+      toast("Approved an API endpoint!", {
+        description: `${notification.endpoint}`,
+        action: {
+          label: "Undo",
+          onClick: () => console.log("Undo"),
+        },
+      })
+
+      await fetchNotifications()
+
     }
   
   catch(e){
-
+      console.log("Could not update status");
+      return;
   }
 }
   return (
     (<Popover>
+      
       <PopoverTrigger asChild>
         <Button variant="outline" size="icon" className="rounded-full relative">
           <BellIcon className="w-5 h-5" />
           <div className="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500" />
         </Button>
       </PopoverTrigger>
+      {!isLoading ? 
       <PopoverContent className="w-[600px] p-0">
+        
 
         <Card className="border-0 shadow-lg h-[50vh] overflow-scroll">
           <CardHeader className="border-b">
@@ -117,6 +178,7 @@ export function Notifications({notifications}) {
           </CardContent>
         </Card>
       </PopoverContent>
+      :<></>}
     </Popover>)
   );
 }

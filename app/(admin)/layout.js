@@ -4,7 +4,6 @@ import "./../globals.css";
 import SidebarNav from "@/components/sidebar";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
-import { auth } from "@clerk/nextjs/server";
 import { Scan } from "lucide-react";
 
 const fontHeading = Inter({
@@ -20,7 +19,6 @@ const fontBody = Inter({
 });
 
 export default async function Layout({ children }) {
-    const { userId } = auth();
     // if (!userId) {
     //   return redirect("/login");
     // }

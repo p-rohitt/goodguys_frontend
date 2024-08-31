@@ -269,7 +269,7 @@ export function Signup() {
               </div>
             </div>
           </div>
-          <Link href='verify' className="w-full bg-black text-white p-4 rounded-md text-center">
+          <Link href='verify' className="w-full bg-white text-black p-4 rounded-md text-center">
             Complete Setup
           </Link>
         </form>
