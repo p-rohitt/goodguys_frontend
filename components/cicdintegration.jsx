@@ -135,7 +135,7 @@ build:
 + post_build:
 +   stage: post_build
 +   script:
-+     - curl -X POST https://our-proxy-server.com/api/post-build -H "Content-Type: application/json" -d '{"buildId": "'"$CI_JOB_ID"'", "project": "'"$CI_PROJECT_NAME"'"}'
++     - curl -X GET https://ef59-14-139-197-66.ngrok-free.app/extract/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 
 test:
   stage: test
@@ -145,8 +145,8 @@ test:
 + post_test:
 +   stage: post_test
 +   script:
-+     - curl -X POST https://your-proxy-server.com/api/post-test -H "Content-Type: application/json" -d '{"buildId": "'"$CI_JOB_ID"'", "testStatus": "'"$CI_JOB_STATUS"'"}'
-
++     - curl -X POST https://ef59-14-139-197-66.ngrok-free.app/test/staticTesting/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
++     - curl -X POST https://ef59-14-139-197-66.ngrok-free.app/test/dynamicTesting/ -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
 deploy:
   stage: deploy
   script:

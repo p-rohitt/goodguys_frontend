@@ -143,7 +143,7 @@ export function Notifications() {
         <Card className="border-0 shadow-lg h-[50vh] overflow-scroll">
           <CardHeader className="border-b">
             <CardTitle>Notifications</CardTitle>
-            <CardDescription>You have {notifications.notifications.length} unread messages.</CardDescription>
+            <CardDescription>You have unread messages.</CardDescription>
           </CardHeader>
           <CardContent className="p-6 space-y-4 flex flex-col justify-center items-start">
           {notifications.notifications.map((notification) => (

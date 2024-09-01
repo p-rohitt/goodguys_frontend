@@ -237,7 +237,7 @@ export function Reports() {
                     </tr>
                   </thead>
                   <tbody>
-                    {REPORTS.map((report, index) => (
+                    {REPORTS.slice().reverse().map((report, index) => (
                       <tr
                         key={index}
                         className="border-b hover:bg-muted/50 cursor-pointer"
