@@ -384,7 +384,7 @@ router.push(`http://localhost:3000/endpoint?path=${encodedPath}`);
                               className={`${
                                 ticket.risk === "High"
                                   ? "bg-red-500 text-red-50"
-                                  : ticket.risk === "Low"
+                                  : ticket.risk === "Medium"
                                   ? "bg-yellow-500 text-yellow-50 w-[8vw]"
                                   : "bg-green-500 text-yellow-50"
                               }`}

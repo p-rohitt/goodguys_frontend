@@ -291,7 +291,7 @@ export function Reports() {
                       <th className="py-2 px-4 text-left">Timestamp</th>
                       <th className="py-2 px-4 text-left">Vulnerable Files</th>
                       <th className="py-2 px-4 text-left">Total Alerts</th>
-                      <th className="py-2 px-4 text-left">Endpoints scanned</th>
+                      <th className="py-2 px-4 text-left">Download</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -318,8 +318,17 @@ export function Reports() {
                             <AlertTriangleIcon />
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-2xl font-bold">
-                          {report.numEndpoints}
+                        <td className="py-3 px-4 font-bold">
+                          <Button  variant="ghost" onClick={()=>downloadJSON("report.json",report)} className="">
+                            <FileJsonIcon />
+                            
+                          </Button>
+                          <Button variant="ghost" onClick={()=>downloadPDF("report.pdf",JSON.stringify(report))} className="">
+                            <IconFileTypePdf />
+                          </Button>
+                          <Button variant="ghost" onClick={()=>downloadText("report.txt",JSON.stringify(report))} className="">
+                            <FileTextIcon />
+                          </Button>
                         </td>
                       </tr>
 )})}

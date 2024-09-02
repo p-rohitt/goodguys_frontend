@@ -56,17 +56,17 @@ export function OwaspChart({owaspIdCounts}) {
       config={{
         brokenAccessControl: { label: "Broken Access Control", color: "hsl(var(--chart-1))" },
         cryptographicFailures: { label: "Cryptographic Failures", color: "hsl(var(--chart-2))" },
-        injection: { label: "Injection", color: "hsl(var(--chart-3))" },
+        injection: { label: "Injection", color: "hsl(var(--chart-3))" },  
         insecureDesign: { label: "Insecure Design", color: "hsl(var(--chart-4))" },
         securityMisconfig: { label: "Security Misconfiguration", color: "hsl(var(--chart-5))" },
-        vulnerableComponents: { label: "Vulnerable and Outdated Components", color: "hsl(var(--chart-6))" },
+        vulnerableComponents: { label: "Vulnerable and Outdated Components", color: "hsl(var(--chart-2))" },
         identificationAuthFailures: {
           label: "Identification and Authentication Failures",
-          color: "hsl(var(--chart-7))",
+          color: "hsl(var(--chart-4))",
         },
-        softwareIntegrityFailures: { label: "Software and Data Integrity Failures", color: "hsl(var(--chart-8))" },
-        loggingMonitoringFailures: { label: "Security Logging and Monitoring Failures", color: "hsl(var(--chart-9))" },
-        serverSideRequestForgery: { label: "Server-Side Request Forgery (SSRF)", color: "hsl(var(--chart-10))" },
+        softwareIntegrityFailures: { label: "Software and Data Integrity Failures", color: "hsl(var(--chart-3))" },
+        loggingMonitoringFailures: { label: "Security Logging and Monitoring Failures", color: "hsl(var(--chart-2))" },
+        serverSideRequestForgery: { label: "Server-Side Request Forgery (SSRF)", color: "hsl(var(--chart-1))" },
       }}
       className="h-[300px] w-[60vw] ml-[-60px]">
       <BarChart

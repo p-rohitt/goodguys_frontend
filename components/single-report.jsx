@@ -41,7 +41,7 @@ export function SingleReport({ id }) {
   const [owaspChartData, setOwaspChartData] = useState([]);
   const [cwecount, setCweCount] = useState(0);
   const [owaspcount, setOwaspCount] = useState(0);
-  const [isHovering,setIsHovering] = useState(false)
+  const [isHovering, setIsHovering] = useState(false);
   useEffect(() => {
     const fetchSingleReport = async () => {
       const response = await fetch(
@@ -110,119 +110,121 @@ export function SingleReport({ id }) {
   }, []);
 
   return (
-    <div key={id} className="border rounded-lg p-6 bg-[var(--primary)] mt-[-100px] ml-[-15px]">
+    <div
+      key={id}
+      className="border  rounded-lg p-6 bg-[var(--primary)] mt-[-100px] ml-[-15px]"
+    >
       {!isLoading ? (
         <div className="flex gap-2 items-center justify-center">
-            <div className=" bg-background/80 flex items-center justify-center  ">
-              <div className="bg-background p-8 rounded-lg shadow-lg w-[70vw] flex flex-col mt-[]">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold">
-                    Scan Report - {detail.reports[0].timestamp}
-                  </h2>
-                </div>
-                <div className="flex-1 overflow-auto">
-                  <div className="grid gap-6">
-                    <div className="flex items-center justify-center gap-3">
-                      <CWEChart chartData={chartData} cwecount={cwecount} />
-                      <OwaspChart
-                        chartData={owaspChartData}
-                        owaspcount={owaspcount}
-                      />
-                    </div>
-
-                    <h3 className="text-md font-medium text-white bg-black p-2">
-                      {detail.reports[0]["report"][0].endpoint}
-                    </h3>
-                    <Accordion type="single" collapsible className="w-full">
-                      {detail.reports[0]["report"][0].alerts.map(
-                        (alert, alertIndex) => (
-                          <AccordionItem
-                            key={alert.id}
-                            value={`alert-${alertIndex}`}
-                          >
-                            <AccordionTrigger>
-                              <div className="flex items-center gap-2">
-                                <span className="font-small">
-                                  {" "}
-                                  {alertIndex + 1}{" "}
-                                </span>
-                                <span className="text-sm">{alert.name}</span>
-                                <div>
-                                  <RiskBadge risk={alert.risk} />
-                                </div>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <div className="grid gap-2">
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Method: {alert.method} | URL: {alert.url}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Evidence:
-                                  </p>
-                                  <p>
-                                    {alert.evidence ? alert.evidence : "NA"}{" "}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    CWEID:
-                                  </p>
-                                  <p>{alert.cweid ? alert.cweid : "NA"}</p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    WASCID:
-                                  </p>
-                                  <p>{alert.wascid ? alert.wascid : "NA"}</p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Param:
-                                  </p>
-                                  <p>{alert.param ? alert.param : "NA"}</p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Risk Score:
-                                  </p>
-                                  <p>
-                                    {alert.risk_score ? alert.risk_score : "NA"}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Description:
-                                  </p>
-                                  <p>
-                                    {alert.description
-                                      ? alert.description
-                                      : "NA"}
-                                  </p>
-                                </div>
-                                <div>
-                                  <p className="text-muted-foreground">
-                                    Solution:
-                                  </p>
-                                  <p>
-                                    {alert.solution ? alert.solution : "NA"}
-                                  </p>
-                                </div>
-                              </div>
-                            </AccordionContent>
-                          </AccordionItem>
-                        )
-                      )}
-                    </Accordion>
+          <div className=" bg-background/80 flex items-center justify-center  ">
+            <div className="bg-background p-8 rounded-lg shadow-lg w-[70vw] flex flex-col mt-[]">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold">
+                  Scan Report - {detail.reports[0].timestamp}
+                </h2>
+              </div>
+              <div className="flex-1 overflow-auto">
+                <div className="grid gap-6">
+                  <div className="flex items-center justify-center gap-3">
+                    <CWEChart chartData={chartData} cwecount={cwecount} />
+                    <OwaspChart
+                      chartData={owaspChartData}
+                      owaspcount={owaspcount}
+                    />
                   </div>
+                  {detail.reports[0]["report"].map((single) => (
+                    <div>
+
+                  <h3 className="text-md font-medium text-white bg-black p-2">
+                    {single.endpoint}
+                  </h3>
+                  <Accordion type="single" collapsible className="w-full">
+
+                    
+
+                   
+                    
+                    {single.alerts.map(
+                      (alert, alertIndex) => (
+                        <AccordionItem
+                          key={alert.id}
+                          value={`alert-${alertIndex}`}
+                        >
+                          <AccordionTrigger>
+                            <div className="flex items-center gap-2">
+                              <span className="font-small">
+                                {" "}
+                                {alertIndex + 1}{" "}
+                              </span>
+                              <span className="text-sm">{alert.name}</span>
+                              <div>
+                                <RiskBadge risk={alert.risk} />
+                              </div>
+                            </div>
+                          </AccordionTrigger>
+                          <AccordionContent>
+                            <div className="grid gap-2">
+                              <div>
+                                <p className="text-muted-foreground">
+                                  Method: {alert.method} | URL: {alert.url}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">
+                                  Evidence:
+                                </p>
+                                <p>{alert.evidence ? alert.evidence : "NA"} </p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">CWEID:</p>
+                                <p>{alert.cweid ? alert.cweid : "NA"}</p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">WASCID:</p>
+                                <p>{alert.wascid ? alert.wascid : "NA"}</p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">Param:</p>
+                                <p>{alert.param ? alert.param : "NA"}</p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">
+                                  Risk Score:
+                                </p>
+                                <p>
+                                  {alert.risk_score ? alert.risk_score : "NA"}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">
+                                  Description:
+                                </p>
+                                <p>
+                                  {alert.description ? alert.description : "NA"}
+                                </p>
+                              </div>
+                              <div>
+                                <p className="text-muted-foreground">
+                                  Solution:
+                                </p>
+                                <p>{alert.solution ? alert.solution : "NA"}</p>
+                              </div>
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      )
+                    )}
+                 
+                  </Accordion>
+                  
+                  </div>
+                ))}
                 </div>
               </div>
             </div>
-          
-          <div className="grid gap-4">
+          </div>
+
+          <div className=" grid gap-4 mt-[-430rem]">
             <Card className="w-[20vw]">
               <CardHeader>
                 <CardTitle> Tickets</CardTitle>
@@ -253,7 +255,7 @@ export function SingleReport({ id }) {
                             {ticket.title}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {ticket.title}
+                            {ticket.endpoint}
                           </div>
                           <div className="mt-2 flex items-center gap-2">
                             <Badge
@@ -263,7 +265,9 @@ export function SingleReport({ id }) {
                                   ? "bg-red-500 text-red-50"
                                   : ticket.risk === "Low"
                                   ? "bg-green-500 text-green-50 w-[8vw]"
-                                  : ticket.risk === "Medium" ? "bg-yellow-500 text-yellow-50" : "bg-indigo-500 text-indigo-50"
+                                  : ticket.risk === "Medium"
+                                  ? "bg-yellow-500 text-yellow-50"
+                                  : "bg-indigo-500 text-indigo-50"
                               }`}
                             >
                               {ticket.status === "Resolved"
@@ -409,7 +413,7 @@ function CWEChart({ chartData, cwecount }) {
           Detected {cwecount} CWE vulnerabilites
         </div>
         <div className="flex items-center gap-2 font-medium leading-none">
-          Reduced by 5.2% since last scan <TrendingDown className="h-4 w-4" />
+          Increased by 66% since last scan <TrendingUp className="h-4 w-4" />
         </div>
       </CardFooter>
     </Card>

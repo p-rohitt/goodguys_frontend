@@ -43,7 +43,7 @@ export function Scanner() {
       return acc;
     }, {});
 
-    try {
+
       const response = await fetch(url, {
         method: 'POST', 
         headers: {
@@ -52,18 +52,16 @@ export function Scanner() {
         body: JSON.stringify(payload)
       });
 
-      const data = await response.json();
-      console.log("Response : ", data) 
-      const stringifiedData  = JSON.stringify(data)
+      const data =  await response.json();
+      console.log("Response : ", data.results)
+      const stringifiedData  = JSON.stringify(data.results)
       setApiResponse(stringifiedData)
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    
   };
 
   return (
     <div className="w-full max-w-2xl mx-auto p-6 md:p-8">
-      <h1 className="text-3xl font-bold mb-6">On Demand API Scanning</h1>
+      <h1 className="text-3xl font-bold mb-6">On Demand API Testing</h1>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="url">URL</Label>
